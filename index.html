@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asraf Typing Learning Website</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #4e73df, #1cc88a);
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+        }
+
+        #typingSection {
+            display: none;
+            margin-top: 50px;
+        }
+
+        textarea {
+            width: 60%;
+            height: 100px;
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .lesson {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container" id="loginSection">
+    <h1>Welcome to Asraf Typing Learning Website</h1>
+    <input type="text" id="name" placeholder="Enter Your Name"><br>
+    <input type="text" id="branch" placeholder="Enter Your Branch"><br>
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="typingSection">
+    <h2 id="welcomeUser"></h2>
+
+    <div class="lesson" id="lessonText">
+        Step 1: Type this → asdf jkl;
+    </div>
+
+    <textarea id="typingInput" placeholder="Start typing here..." oninput="checkTyping()"></textarea>
+
+    <div class="result">
+        <p>Speed: <span id="speed">0</span> WPM</p>
+        <p>Accuracy: <span id="accuracy">0</span>%</p>
+    </div>
+
+    <button onclick="nextLesson()">Next Lesson</button>
+</div>
+
+<script>
+    let startTime;
+    let lessonIndex = 0;
+
+    const lessons = [
+        "asdf jkl;",
+        "asdf asdf jkl; jkl;",
+        "The quick brown fox jumps over the lazy dog",
+        "Typing practice makes you perfect"
+    ];
+
+    function login() {
+        let name = document.getElementById("name").value;
+        let branch = document.getElementById("branch").value;
+
+        if(name === "" || branch === "") {
+            alert("Please enter Name and Branch");
+            return;
+        }
+
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("typingSection").style.display = "block";
+
+        document.getElementById("welcomeUser").innerHTML =
+            "Hello " + name + " (" + branch + ") - Start Typing Practice!";
+
+        document.getElementById("lessonText").innerHTML =
+            "Step 1: Type this → " + lessons[lessonIndex];
+
+        startTime = new Date().getTime();
+    }
+
+    function checkTyping() {
+        let input = document.getElementById("typingInput").value;
+        let lesson = lessons[lessonIndex];
+
+        let currentTime = new Date().getTime();
+        let timeTaken = (currentTime - startTime) / 1000 / 60;
+
+        let words = input.length / 5;
+        let speed = Math.round(words / timeTaken);
+
+        document.getElementById("speed").innerHTML = speed;
+
+        let correctChars = 0;
+        for(let i = 0; i < input.length; i++) {
+            if(input[i] === lesson[i]) {
+                correctChars++;
+            }
+        }
+
+        let accuracy = Math.round((correctChars / lesson.length) * 100);
+        document.getElementById("accuracy").innerHTML = accuracy;
+    }
+
+    function nextLesson() {
+        lessonIndex++;
+        if(lessonIndex >= lessons.length) {
+            alert("Typing Course Completed!");
+            lessonIndex = 0;
+        }
+
+        document.getElementById("lessonText").innerHTML =
+            "Next Step: Type this → " + lessons[lessonIndex];
+
+        document.getElementById("typingInput").value = "";
+        document.getElementById("speed").innerHTML = 0;
+        document.getElementById("accuracy").innerHTML = 0;
+        startTime = new Date().getTime();
+    }
+</script>
+
+</body>
+</html>
